@@ -96,11 +96,37 @@ def run_task_safely(robot, **kwargs):
         print(f"{robot.name} battery now {robot.battery}%.")
 
 
+class Buggy:
+    items = []  # shared by every instance -- the bug
+ 
+    def add(self, x):
+        self.items.append(x)
+ 
+ 
+class Fixed:
+    def __init__(self):
+        self.items = []  # each instance gets its own list -- the fix
+ 
+    def add(self, x):
+        self.items.append(x)
+
+
 if __name__ == "__main__":
     roomba = CleaningRobot("Roomba", dust_capacity=2.0)
     drone = DroneRobot.from_config({"name": "Aqua-Drone", "battery": 15})
  
     fleet_report([roomba, drone])
-    run_task_safely(roomba)   # succeeds
-    run_task_safely(drone)    # fails: not enough battery
+    run_task_safely(roomba)   
+    run_task_safely(drone)    
+
+
+
+    a, b = Buggy(), Buggy()
+    a.add(1)
+    b.add(2)
+    print("Buggy shared list:", a.items, b.items, a.items is b.items)
  
+    c, d = Fixed(), Fixed()
+    c.add(1)
+    d.add(2)
+    print("Fixed separate lists:", c.items, d.items, c.items is d.items)
