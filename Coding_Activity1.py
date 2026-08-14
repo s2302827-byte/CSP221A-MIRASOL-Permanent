@@ -46,6 +46,15 @@ class Robot(abc.ABC):
         return cls(**config)
 
 
+def log_action(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        logging.info(f"{self.name}: starting {func.__name__}")
+        result = func(self, *args, **kwargs)
+        logging.info(f"{self.name}: finished {func.__name__}")
+        return result
+    return wrapper
+
 
 class CleaningRobot(Robot):
     def __init__(self, name, battery=100, dust_capacity=1.5):
@@ -57,6 +66,7 @@ class CleaningRobot(Robot):
         self.use_battery(10)
         return f"{self.name} vacuumed a room."
  
+
  
 class DroneRobot(Robot):
     def __init__(self, name, battery=100, max_altitude=120):
@@ -66,3 +76,31 @@ class DroneRobot(Robot):
     def perform_task(self, **kwargs):
         self.use_battery(25)
         return f"{self.name} flew at {self.max_altitude}m."
+
+
+
+def fleet_report(robots):
+    for robot in robots:
+        print(str(robot))
+
+
+
+def run_task_safely(robot, **kwargs):
+    try:
+        result = robot.perform_task(**kwargs)
+    except InsufficientBatteryError as exc:
+        logging.error(str(exc))
+    else:
+        print(f"Result: {result}")
+    finally:
+        print(f"{robot.name} battery now {robot.battery}%.")
+
+
+if __name__ == "__main__":
+    roomba = CleaningRobot("Roomba", dust_capacity=2.0)
+    drone = DroneRobot.from_config({"name": "Aqua-Drone", "battery": 15})
+ 
+    fleet_report([roomba, drone])
+    run_task_safely(roomba)   # succeeds
+    run_task_safely(drone)    # fails: not enough battery
+ 
