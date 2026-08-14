@@ -44,3 +44,25 @@ class Robot(abc.ABC):
     @classmethod
     def from_config(cls, config):
         return cls(**config)
+
+
+
+class CleaningRobot(Robot):
+    def __init__(self, name, battery=100, dust_capacity=1.5):
+        super().__init__(name, battery)
+        self.dust_capacity = dust_capacity
+ 
+    @log_action
+    def perform_task(self, **kwargs):
+        self.use_battery(10)
+        return f"{self.name} vacuumed a room."
+ 
+ 
+class DroneRobot(Robot):
+    def __init__(self, name, battery=100, max_altitude=120):
+        super().__init__(name, battery)
+        self.max_altitude = max_altitude
+ 
+    def perform_task(self, **kwargs):
+        self.use_battery(25)
+        return f"{self.name} flew at {self.max_altitude}m."
