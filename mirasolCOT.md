@@ -1,0 +1,1 @@
+first i pinpoint the variables, methods, and classes that i would be using to slowly build up the task, then the next is building class. Made 3 classes which is 2 for error handling and 1 is the main class which is for student, then after it building the functions or def inside of each classes going first  then after stucturing the functions
