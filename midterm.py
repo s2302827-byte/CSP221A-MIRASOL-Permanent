@@ -22,7 +22,7 @@ class Student:
         
        
         try:
-            scores_arr = np.array(scores, dtype=float)
+            scores_ar = np.array(scores, dtype=float)
         except (ValueError, TypeError) as e:
             raise ValueError(f"Could not convert scores to numeric array: {e}")
             
